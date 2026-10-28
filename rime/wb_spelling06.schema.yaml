@@ -1,0 +1,8 @@
+# SPDX-License-Identifier: CC0-1.0
+# Hidden deployment dependency; omitted from the selectable schema list.
+schema:
+  schema_id: wb_spelling06
+  name: 新世纪五笔拆分辅助
+  version: '1.0'
+translator:
+  dictionary: wb_spelling06

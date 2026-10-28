@@ -1,0 +1,259 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fcitx5 Android · 五笔与雾凇拼音安装指南</title>
+<style>
+:root { color-scheme:light; --ink:#1e2937; --muted:#52616b; --accent:#176a5d; --line:#dbe5e1; }
+* { box-sizing:border-box; }
+body { margin:0; background:#f2f5f3; color:var(--ink); font-family:"Noto Sans CJK SC","Microsoft YaHei",sans-serif; font-size:15px; line-height:1.85; }
+main { max-width:980px; margin:36px auto; background:white; padding:48px 58px; border:1px solid var(--line); border-radius:18px; }
+.eyebrow { color:var(--accent); font-size:12px; font-weight:700; letter-spacing:2px; }
+h1 { font-size:32px; line-height:1.35; margin:12px 0; letter-spacing:-.5px; }
+.subtitle { font-size:19px; margin:0; color:var(--muted); }
+.meta { color:var(--muted); font-size:12px; margin:14px 0 28px; }
+.start { border-left:4px solid var(--accent); background:#f1f7f4; padding:14px 22px; margin:24px 0; }
+nav { padding:18px 22px; background:#f7f9f8; border:1px solid var(--line); border-radius:10px; }
+nav strong { display:block; margin-bottom:8px; }
+nav a { display:block; text-decoration:none; line-height:2; }
+a { color:var(--accent); overflow-wrap:anywhere; }
+h2 { font-size:21px; margin:38px 0 18px; padding-top:9px; border-top:2px solid var(--line); break-after:avoid; }
+.block { white-space:pre-wrap; overflow-wrap:anywhere; margin:14px 0; }
+.command { display:block; white-space:pre-wrap; overflow-wrap:anywhere; color:#133c36; background:#eef5f1; border:1px solid #d4e5dc; border-radius:7px; padding:12px 14px; font-family:"DejaVu Sans Mono",Consolas,"Noto Sans CJK SC",monospace; font-size:12.5px; line-height:1.8; }
+.footer { border-top:1px solid var(--line); margin-top:36px; padding-top:18px; color:var(--muted); font-size:12px; }
+@media (max-width:700px) { main { margin:0; border:0; border-radius:0; padding:26px 20px; } h1 { font-size:27px; } .command { font-size:12px; } }
+@page { size:A4; margin:15mm 16mm 19mm; }
+@media print { body { background:white; font-size:10.3pt; line-height:1.7; } main { margin:0; max-width:none; padding:0; border:0; border-radius:0; } h1 { font-size:25pt; } h2 { font-size:15pt; margin-top:22px; } nav { padding:12px 16px; } nav a { display:inline-block; margin-right:16px; font-size:9pt; line-height:1.8; } .block { break-inside:avoid; margin:10px 0; } .command { font-size:8.4pt; padding:8px 10px; break-inside:avoid; } a { color:inherit; text-decoration:none; } .start { padding:9px 16px; } }
+</style></head><body><main>
+<header><div class="eyebrow">FCITX5 ANDROID · START HERE</div>
+<h1>五笔与雾凇拼音<br>完整安装指南</h1><p class="subtitle">Windows电脑准备 · Android手机使用</p>
+<p class="meta">五笔86 / 98 / 06 + Rime Ice全拼 · 更新2026-10-28 · 新写文档CC0-1.0</p></header>
+<div class="start"><p class="block">从安装到使用，只需完成这条路线：
+安装主程序与Rime插件 → 启用键盘 → 下载并分别解压两个上游 → 解压配置包
+→ 在电脑运行Python生成导入ZIP → 手机导入与部署 → 导入并选择候选字体 → 开始输入。</p>
+<p class="block">完成后，在同一个Rime方案菜单中选择：
+  新世纪五笔（06） / 五笔86 / 五笔98 / 雾凇拼音（全拼）。</p>
+<p class="block">本指南使用带“字体”设置的Fcitx5 Android版本。需要06字根图片提示时，还应使用
+包含该提示功能的主程序。请使用本教程发布者提供的相应主程序APK及配套Rime插件
+APK；这个配置包不包含APK。普通上游版本是否有相同字体和提示功能，以其版本为准。</p></div>
+<nav aria-label="目录"><strong>安装路线与目录</strong><a href="#chapter-1">一、准备这些文件</a><a href="#chapter-2">二、在手机安装主程序和Rime插件</a><a href="#chapter-3">三、在电脑下载并分别解压两个上游ZIP</a><a href="#chapter-4">四、解压配置包，安装Python</a><a href="#chapter-5">五、运行一次命令，生成手机导入ZIP</a><a href="#chapter-6">六、在手机导入ZIP并部署Rime</a><a href="#chapter-7">七、把五笔TTF字体传到手机，导入并设为候选字体</a><a href="#chapter-8">八、正常使用：选择方案和输入</a><a href="#chapter-9">九、遇到问题时</a><a href="#chapter-10">十、文件、许可与备份</a><a href="#chapter-11">English walkthrough</a></nav>
+<section id="chapter-1"><h2>一、准备这些文件</h2><p class="block">手机需要：
+  1. Fcitx5 Android主程序APK，包含“虚拟键盘 → 字体”页面。
+  2. 与主程序兼容的Rime插件APK（也叫“中州韵插件”；项目模块名plugin.rime）。
+电脑需要：
+  3. 五笔上游完整ZIP：<a href="https://github.com/myshiqiqi/rime-wubi/tree/master">https://github.com/myshiqiqi/rime-wubi/tree/master</a>
+  4. 雾凇上游完整ZIP：<a href="https://github.com/iDvel/rime-ice">https://github.com/iDvel/rime-ice</a>
+  5. 本配置包：wubi-and-rime-ice-starter-kit.zip，或原wubi-and-rime-ice-overlay.zip。
+  6. Python 3：<a href="https://www.python.org/downloads/windows/">https://www.python.org/downloads/windows/</a></p>
+<p class="block">本教程发布处提供配置包下载。主程序和插件请选发布者注明的兼容版本及手机架构；
+如提供通用版可选通用版，不确定时按发布者说明选择。两份上游ZIP都要下载。
+APK用于手机安装；两个上游ZIP与配置包在电脑解压；最终生成的ZIP直接传给手机导入。</p>
+<p class="block">项目参考：<a href="https://github.com/fcitx5-android/fcitx5-android">https://github.com/fcitx5-android/fcitx5-android</a>
+上游发行页：<a href="https://github.com/fcitx5-android/fcitx5-android/releases/latest">https://github.com/fcitx5-android/fcitx5-android/releases/latest</a>
+这些链接供查阅上游项目；本教程中的字体与06图片提示取决于你安装的主程序版本。</p></section>
+<section id="chapter-2"><h2>二、在手机安装主程序和Rime插件</h2><p class="block">旧用户：先在“高级 → 导出用户数据”保存一份私人备份。若Android提示APK签名不匹配，
+不要直接卸载丢失数据；使用与现有版本相同签名的更新包，或先完成备份再按发布者的
+迁移说明操作。主程序与插件的版本/API及架构需要兼容，不要随意混用不明版本。</p>
+<p class="block">1. 将主程序APK与Rime插件APK传到手机，例如放进“下载 / Download”。
+2. 在手机文件管理器点开主程序APK，按Android安装提示完成安装。
+   如果系统要求允许当前文件管理器“安装未知应用”，按系统提示为此次安装开启。
+3. 同样安装Rime插件APK。插件不是另一个需要设为默认的键盘。
+4. 打开Fcitx5 Android（中文名称通常为“小企鹅输入法”）。
+5. 点“启用输入法”，在Android系统列表中启用“小企鹅输入法”。
+6. 回到app，点“选择输入法”，把“小企鹅输入法”设为当前键盘。
+7. 打开主程序“插件”页面。若显示“检测到插件更改，点此重新加载”，点它重新加载，
+   确认Rime插件已加载。安装插件后若没有刷新，关闭并重新打开主程序再检查。
+8. 返回“输入法”页面，使用“添加输入法”选择Rime，把它加入已启用列表。
+   已有Rime时不用重复添加。在文字输入框中切换到Rime输入。</p>
+<p class="block">这一阶段只需要让主程序、插件和Rime正常出现；四个自定义方案将在导入部署后出现。</p></section>
+<section id="chapter-3"><h2>三、在电脑下载并分别解压两个上游ZIP</h2><p class="block">五笔：
+  打开 <a href="https://github.com/myshiqiqi/rime-wubi/tree/master">https://github.com/myshiqiqi/rime-wubi/tree/master</a>
+  点绿色“Code”按钮 → “Download ZIP”，下载后全部解压。</p>
+<p class="block">雾凇：
+  打开 <a href="https://github.com/iDvel/rime-ice">https://github.com/iDvel/rime-ice</a>
+  点“Code” → “Download ZIP”，下载后全部解压。</p>
+<p class="block">假设你把它们放在：
+  D:\Downloads\rime-wubi-master
+  D:\Downloads\rime-ice-main</p>
+<p class="block">检查你选中的目录：
+  五笔目录内直接能看到wubi.schema.yaml、default.yaml、tables和font。
+  雾凇目录内直接能看到rime_ice.schema.yaml、rime_ice.dict.yaml、cn_dicts、en_dicts和lua。</p>
+<p class="block">有些解压工具会额外套一层同名文件夹。命令要指向真正包含上述文件的内层目录，
+不要指向ZIP本身，也不要指向只装着另一个同名文件夹的外层目录。
+两个项目分开保留，不能把它们整包相互覆盖。暂时不需要手工编辑任何YAML。</p>
+<p class="block">复现已检查快照时，可下载以下完整ZIP，解压目录通常带提交编号：
+  五笔：<a href="https://github.com/myshiqiqi/rime-wubi/archive/e5c4bc88684d0c1549da393dd8ba845e48e66973.zip">https://github.com/myshiqiqi/rime-wubi/archive/e5c4bc88684d0c1549da393dd8ba845e48e66973.zip</a>
+  雾凇：<a href="https://github.com/iDvel/rime-ice/archive/da1fbe602e38f26db846fa10120ee64c2b0324c0.zip">https://github.com/iDvel/rime-ice/archive/da1fbe602e38f26db846fa10120ee64c2b0324c0.zip</a>
+使用这种下载时，后面的目录参数改成实际的带编号文件夹即可。</p></section>
+<section id="chapter-4"><h2>四、解压配置包，安装Python</h2><p class="block">1. 下载本教程发布处的配置包并全部解压，例如放到：
+     D:\Downloads\wubi-ice-kit
+2. 打开这个目录，确认make_android_import.py、rime文件夹、lua文件夹和README.txt
+   在同一层。保留它们的相对位置，不要只把.py文件拖到别处运行。
+3. 如果电脑尚未安装Python，从Python官网安装Python 3。
+   使用传统Windows安装器时，可勾选“Add python.exe to PATH”及Python launcher。
+   已安装Python 3且能使用py或python命令时，不需要重新安装。
+4. 关闭旧终端，在配置包目录打开新的终端：
+   Windows 11可在文件管理器空白处右键 →“在终端中打开”；
+   也可打开PowerShell，再运行下面的cd命令（目录改成自己的）：
+<code class="command">cd &quot;D:\Downloads\wubi-ice-kit&quot;</code>
+5. 输入以下命令确认Python可用：
+<code class="command">py -3 --version</code>
+   如果没有py命令，试：
+<code class="command">python --version</code>
+   输出应为Python 3.x。若只打开Microsoft Store而不显示版本，先安装并配置Python。</p></section>
+<section id="chapter-5"><h2>五、运行一次命令，生成手机导入ZIP</h2><p class="block">在配置包目录的PowerShell中，复制下面完整一行，修改两个上游目录后按Enter：</p>
+<p class="block"><code class="command">py -3 .\make_android_import.py --upstream &quot;D:\Downloads\rime-wubi-master&quot; --ice-upstream &quot;D:\Downloads\rime-ice-main&quot;</code></p>
+<p class="block">路径含空格或中文时也要保留双引号。这里的--upstream指五笔目录，--ice-upstream指雾凇目录。
+如果电脑使用python命令，把开头的“py -3”替换为“python”，其余保持不变：</p>
+<p class="block"><code class="command">python .\make_android_import.py --upstream &quot;D:\Downloads\rime-wubi-master&quot; --ice-upstream &quot;D:\Downloads\rime-ice-main&quot;</code></p>
+<p class="block">工具不需要管理员权限，也不需要pip安装其他模块。它在本地读取资源，不联网。
+成功后终端会显示“Created:”和生成位置。配置包目录内会出现：</p>
+<p class="block">  wubi-and-ice-android.zip</p>
+<p class="block">电脑准备目录的例子：
+  D:\Downloads\
+    rime-wubi-master\        五笔原始资源，保持原样
+    rime-ice-main\           雾凇原始资源，保持原样
+    wubi-ice-kit\
+      make_android_import.py
+      rime\
+      lua\
+      wubi-and-ice-android.zip  ← 把这个生成的ZIP传给手机</p>
+<p class="block">如果终端报错，先按第九节排查。请使用成功生成的ZIP，不要把任意上游ZIP改名当成结果。
+不想安装Python时，请改看MANUAL-INSTALL.txt；它完整列出文件复制与词库头部编辑步骤。</p></section>
+<section id="chapter-6"><h2>六、在手机导入ZIP并部署Rime</h2><p class="block">1. 将电脑生成的wubi-and-ice-android.zip传到手机“下载 / Download”。
+   不解压、不改里面的文件，也不用手机文件管理器访问app私有目录。
+2. 打开Fcitx5 Android →“高级”→“导入用户数据”。
+3. 选择刚传来的wubi-and-ice-android.zip，确认导入，等待完成并重新打开app。
+   app可能退出并显示重启通知，这是导入流程的一部分；若未自动打开，请手动打开。
+4. 打开任意可编辑文字框，调出Fcitx5键盘，切换到Rime。
+5. 打开键盘工具栏“更多”（⋮），在Rime相关操作中执行“Deploy / 部署”。
+   名称可能随语言显示为“重新部署”等。不要用普通“重载配置”代替Rime部署。
+   请等待部署完成。雾凇包含较大词库，首次部署通常比五笔慢，手机上所需时间不同。
+6. 部署后让Fcitx重新启动一次，使方案列表和五笔Lua菜单更新。
+   可在主程序设置页右上角“⋮ → 开发者 → 重启 Fcitx 实例”执行重启；
+   或在Android系统“设置 → 应用 → Fcitx5 Android / 小企鹅输入法”中“强行停止”，
+   然后重新打开app并调出键盘。不要点“清除数据”。
+7. 再次打开“键盘工具栏更多 → 当前Rime方案项”，应看到四个并列方案：
+     新世纪五笔 / 五笔86 / 五笔98 / 雾凇拼音。</p>
+<p class="block">导入的是生成的wubi-and-ice-android.zip，不是两个上游源ZIP，也不是本教程配置包ZIP。
+如果原来已安装其他Rime设置，导入会合并、覆盖同名文件，不会删除所有旧文件。
+保留自己的词库和备份，个人补丁可在安装成功后逐项合并；无需清空整个app。</p></section>
+<section id="chapter-7"><h2>七、把五笔TTF字体传到手机，导入并设为候选字体</h2><p class="block">电脑上找到已经解压的五笔上游文件：</p>
+<p class="block">  D:\Downloads\rime-wubi-master\font\黑体字根.ttf</p>
+<p class="block">1. 把黑体字根.ttf单独复制到手机“下载 / Download”。
+   可以使用USB文件传输等方法，保持.ttf文件本身，不要变成压缩包或.txt文件。
+2. 打开Fcitx5 Android设置，依次进入：
+     虚拟键盘 → 字体 → 导入字体
+     Virtual Keyboard → Fonts → Import font
+3. 在Android文件选择器中打开“下载”，选中黑体字根.ttf，等待显示导入成功。
+4. 仍在“字体”页面，找到“候选词 / Candidates”分组，点其中的“选择字体 / Choose fonts”。
+5. 勾选刚导入的黑体字根.ttf（显示名可能不含扩展名），按“确定 / OK”保存。
+   如果选了多个字体，把字根字体放在候选词的回退顺序首位，方便显示其专用字形。
+6. 收起键盘再打开，使新字体设置生效。</p>
+<p class="block">“导入字体”只是把文件加入字体库；还必须在“候选词”分组中选中并确定。
+只需给候选词设置这个字体，不必把全局字体或所有按键文字都改成它。
+若想调整大小，可在同一“候选词”分组改“字体大小”，也可保留默认。</p>
+<p class="block">使用五笔时，在Rime选项菜单开启“显示拆分”，再输入编码检查候选注释。
+如果字根之前显示为方块，选对候选字体后应显示相应字形。
+06字根图片弹窗使用app原有图片，不依赖这份TTF；候选拆分字形则可能需要它。
+字体由用户从上游自行取得，不附带在本配置包或工具生成的ZIP中。</p></section>
+<section id="chapter-8"><h2>八、正常使用：选择方案和输入</h2><p class="block">每次需要切换方案：
+  键盘工具栏“更多”（⋮）→ 当前Rime方案项 → 点选目标方案。</p>
+<p class="block">四个方案的用途：
+  新世纪五笔：06码表；保持原方案名称，配合含06图片提示的主程序使用。
+  五笔86：86码表，独立词库与学习记录。
+  五笔98：98码表，独立词库与学习记录。
+  雾凇拼音：全拼输入、简拼、英文与中英混输。</p>
+<p class="block">第一次完成后，可以做这几个小检查：
+  雾凇拼音：输入nihao，候选应出现“你好”；选中即可上屏。
+  五笔：输入znihao，可用拼音反查“你好”。这是五笔内的辅助反查。
+  五笔：输入qz后按Enter，原始窄字符qz应上屏，不应消失。
+  五笔：开启“显示拆分”，检查候选注释中的字根是否正常显示。
+  四个方案都能从原生菜单切换；06图片提示只在新世纪五笔中启用。</p>
+<p class="block">常用工具：
+  五笔：date日期，time时间，week星期，=1+2计算，help查看说明。
+  雾凇：rq日期，sj时间，xq星期，nl农历，cC1+2计算。
+  雾凇拆字反查：uU后接部件拼音，例如uUmumu查“林”。
+  简繁、Emoji、五笔拆分显示等功能，在当前Rime方案的选项菜单切换。
+  Enter提交当前原始字母；默认半角。要提交中文候选，请点候选或使用选字键。</p>
+<p class="block">触屏切换请使用Rime原生方案菜单。五笔上游的mode/next文字命令依赖数字键选择，
+直接点它们的候选标签可能把标签当文字上屏；新用户无需使用这些命令。
+成功部署后即可日常离线输入，不必每次运行Python、重新导入或重新部署。
+只有更新方案或词库时，才需要再次生成、导入和部署；更新前保存私人备份。</p></section>
+<section id="chapter-9"><h2>九、遇到问题时</h2><p class="block">找不到.py、提示“No such file”
+  确认终端当前目录是配置包目录，里面直接有make_android_import.py。
+  把完整配置包解压，不要只移动一个.py；检查文件是否意外变成.py.txt。</p>
+<p class="block">提示“Required file missing”
+  检查两个上游是否完整解压，参数是否指向真正包含schema文件的内层目录。
+  把五笔路径给--upstream，雾凇路径给--ice-upstream，不要填反。
+  若最新上游结构已经改变，可用第三节固定快照的完整ZIP重试。</p>
+<p class="block">手机没有Rime、插件未加载
+  确认安装了Rime插件APK，主程序“插件”已重新加载，并在“输入法”中添加Rime。
+  若显示插件API或架构不兼容，使用发布者提供的兼容版本重新安装。</p>
+<p class="block">导入提示包名不匹配
+  此工具默认对应主程序包名org.fcitx.fcitx5.android。
+  若发布者明确提供不同包名，在原命令末尾加--package-name &quot;发布者给出的真实包名&quot;
+  后重新生成；普通发布版用户不需要加这个参数，不要把应用显示名当作包名。</p>
+<p class="block">导入提示MALFORMED[1]或压缩包无效
+  重新传输工具直接生成的ZIP，不要用WinRAR重新压缩、改文件名编码或导入源ZIP。
+  若使用完全手动方法，按MANUAL-INSTALL.txt保留UTF-8文件名和ZIP目录结构。</p>
+<p class="block">四个方案没有出现，或仍看到旧方案
+  确认Rime插件已加载、Rime已加入输入法列表，导入的是生成ZIP，并完成部署和重启。
+  如果已有复杂个人配置，先备份，再按MANUAL-INSTALL.txt处理旧Rime文件；导入不会自动删除它们。</p>
+<p class="block">没有“虚拟键盘 → 字体”
+  当前主程序可能不含字体选择功能。请安装教程发布者提供的带该功能的版本；
+  仅安装Rime插件或导入配置ZIP不会给主程序添加字体页面。</p>
+<p class="block">字体导入成功，但拆分注释仍有方块
+  再检查“字体 → 候选词 → 选择字体”是否已勾选并按确定；多字体时先把字根字体置首。
+  收起并重新打开键盘；确认Rime“显示拆分”已开启，并使用五笔方案检查。</p>
+<p class="block">Enter结果不正确
+  先重新选择方案，再测试qz+Enter。若装过个人补丁，检查是否又合并了旧的回车取消
+  或全角设置；本包默认提交原始半角字母。</p></section>
+<section id="chapter-10"><h2>十、文件、许可与备份</h2><p class="block">本教程、配置、两个Lua兼容适配器及Python工具为新写的CC0内容。
+用户自行下载的五笔/雾凇词库、Lua、字体等保留其原有权利，不属于这份CC0声明。
+雾凇声明GPL-3.0-only并含其他来源组件；组装资源内保留其LICENSE与Credits.md。
+所检查五笔快照没有明确LICENSE，若要分发含词库或字体的成品，请先向来源核实授权。
+本配置包不附带APK、上游词库、上游Lua或黑体字根.ttf。
+个人导出备份可能含剪贴板、历史和学习词库，请只供自己保存，不要当公共安装包发布。</p>
+<p class="block">本教程不修改主程序或插件代码。四方案配置已通过Linux Rime引擎验证；用户已反馈
+组合配置运行良好。具体Android菜单文字会随版本、语言和设备变化，以实际页面为准。</p></section>
+<section id="chapter-11"><h2>English walkthrough</h2><p class="block">1. Install the publisher&#x27;s Fcitx5 Android APK with Fonts settings and the matching
+   Rime plugin APK. For Wubi06 image hints, use the app build that includes them.
+   This kit contains neither APK. Open the app, tap Enable Input Method, enable it
+   in Android, then tap Select Input Method. In Plugins, reload detected changes;
+   confirm Rime is loaded. In Input Methods, use Add Input Method to add Rime.
+2. Download both full upstream ZIPs from their GitHub Code → Download ZIP menus:
+     <a href="https://github.com/myshiqiqi/rime-wubi/tree/master">https://github.com/myshiqiqi/rime-wubi/tree/master</a>
+     <a href="https://github.com/iDvel/rime-ice">https://github.com/iDvel/rime-ice</a>
+   Extract them separately. Use the inner folders that directly contain
+   wubi.schema.yaml and rime_ice.schema.yaml, respectively.
+3. Download/extract this starter kit separately. Keep make_android_import.py,
+   rime/, lua/ and the reference documents together. Install Python 3 from
+   python.org if needed. Open a new PowerShell terminal in the kit folder.
+4. Run this complete line, replacing both paths with your actual folders:
+<code class="command">py -3 .\make_android_import.py --upstream &quot;D:\Downloads\rime-wubi-master&quot; --ice-upstream &quot;D:\Downloads\rime-ice-main&quot;</code>
+   If your Python command is python instead of py, replace only py -3 with python.
+   No administrator rights or extra Python packages are required.
+5. Copy the generated wubi-and-ice-android.zip to your phone. Keep it zipped.
+   In Fcitx5 Android, open Advanced → Import user data, select that generated ZIP,
+   confirm, and reopen the app after import. Do not import either source ZIP or
+   the starter-kit ZIP. Back up your existing configuration first if applicable.
+6. Bring up the keyboard and switch to Rime. Open toolbar More and run the Rime
+   Deploy action, rather than generic Reload Config. Wait for completion; full
+   Ice dictionaries take longer at first. Restart Fcitx once more afterward:
+   main settings ⋮ → Developer → Restart fcitx instance. Alternatively, force-stop
+   the main app in Android Settings → Apps, then reopen it. Do not clear app data.
+7. On the computer, find rime-wubi-master\font\黑体字根.ttf and copy that file
+   separately to the phone&#x27;s Downloads folder. In the main app open
+   Virtual Keyboard → Fonts → Import font and select the TTF. Then find the
+   Candidates section → Choose fonts, tick the imported font and press OK.
+   If using multiple fonts, put this radical font first in the candidate fallback
+   order. Close and reopen the keyboard. Importing alone does not select a font.
+8. In toolbar More → current Rime scheme, choose 新世纪五笔 / 五笔86 / 五笔98 /
+   雾凇拼音. Enable decomposition display in Wubi&#x27;s options if desired. In Ice,
+   nihao should offer 你好; in Wubi, znihao performs Pinyin reverse lookup and qz
+   followed by Enter commits narrow qz. Use candidate selection to commit Chinese.
+   After initial setup, normal typing works offline; redeploy only when updating
+   configuration or dictionaries.</p>
+<p class="block">For a complete no-Python assembly, see MANUAL-INSTALL.txt. The source font and all
+upstream resources keep their original rights. Keep personal export backups private.</p></section>
+<p class="footer">同包参考：<a href="START-HERE.txt">纯文本完整指南</a> · <a href="README.txt">配置包说明</a> · <a href="MANUAL-INSTALL.txt">不使用Python的手工组装步骤</a>。本页可离线打开，也可用浏览器打印或保存为PDF。</p>
+</main></body></html>

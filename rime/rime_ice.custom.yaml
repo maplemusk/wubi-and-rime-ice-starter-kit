@@ -1,0 +1,18 @@
+# SPDX-License-Identifier: CC0-1.0
+# Keep Ice's defaults separate from the Wubi defaults in this shared directory.
+patch:
+  "punctuator/__include": ice_defaults:/punctuator
+  "punctuator/full_shape/__include": ice_defaults:/punctuator/full_shape
+  "punctuator/half_shape/__include": ice_defaults:/punctuator/half_shape
+  "recognizer/import_preset": ice_defaults
+  "key_binder/import_preset": ice_defaults
+  "key_binder/select_first_character": bracketleft
+  "key_binder/select_last_character": bracketright
+  ascii_composer:
+    __include: ice_defaults:/ascii_composer
+    switch_key:
+      Shift_L: noop
+      Shift_R: noop
+  "switches/@0/reset": 0
+  "switches/@4/reset": 0
+  "editor/bindings/Return": commit_raw_input

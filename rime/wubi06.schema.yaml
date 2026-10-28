@@ -1,0 +1,90 @@
+# SPDX-License-Identifier: CC0-1.0
+# Functional overlay; obtain wubi.schema.yaml and optional resources from upstream yourself.
+# Every variant uses its own code table, decomposition reverse DB and user dictionary.
+schema:
+  schema_id: wubi06
+  name: 新世纪五笔
+  version: 1.0-multi
+__include: wubi.schema:/
+__patch:
+  schema/schema_id: wubi06
+  schema/name: 新世纪五笔
+  schema/version: 1.0-multi
+  schema/dependencies:
+  - wb_spelling06
+  - pinyin_aux
+  switches:
+  - name: ascii_mode
+    reset: 0
+    states:
+    - 中文
+    - 英文
+  - name: show_es
+    states:
+    - Emoji关
+    - Emoji开
+  - name: zh_trad
+    states:
+    - 简体
+    - 繁体
+  - name: new_spelling
+    states:
+    - 隐藏拆分
+    - 显示拆分
+  - name: new_hide_pinyin
+    states:
+    - 显示拼音
+    - 隐藏拼音
+  - name: GB2312
+    states:
+    - 扩展字集
+    - 常用字集
+  - name: single_char
+    states:
+    - 字词
+    - 单字
+  - name: full_shape
+    reset: 0
+    states:
+    - 半角
+    - 全角
+  menu/page_size: 5
+  translator/dictionary: wubi06.extended
+  translator/user_dict: wubi06
+  fixed/dictionary: wubi06.extended
+  fixed/user_dict: wubi06
+  mkst/dictionary: wubi06.extended
+  mkst/user_dict: wubi06
+  rvl_zhuyin/dictionary: wubi06.extended
+  rvl_zhuyin/user_dict: wubi06
+  ci_reverse_lookup/dictionary: wubi06.extended
+  lua_reverse_db/spelling: wb_spelling06
+  lua_reverse_db/code: wb_spelling06
+  editor/bindings/Return: commit_raw_input
+  ascii_composer/switch_key/Shift_L: noop
+  ascii_composer/switch_key/Shift_R: noop
+  engine/processors:
+  - ascii_composer
+  - lua_processor@submit_text_processor
+  - lua_processor@*wubi_switcher_guard
+  - recognizer
+  - key_binder
+  - speller
+  - punctuator
+  - selector
+  - navigator
+  - express_editor
+  engine/translators:
+  - punct_translator
+  - reverse_lookup_translator
+  - table_translator@rvlk1
+  - table_translator
+  - table_translator@fixed
+  - table_translator@mkst
+  - table_translator@rvl_zhuyin
+  - history_translator@history
+  - lua_translator@helper
+  - lua_translator@*date_ts
+  - lua_translator@*date_extend_ts
+  - lua_translator@test
+  - lua_translator@*wubi_calculator_guard

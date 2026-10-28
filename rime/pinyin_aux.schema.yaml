@@ -1,0 +1,10 @@
+# SPDX-License-Identifier: CC0-1.0
+# Build the shared pinyin table without depending on the upstream generic Wubi schema.
+schema:
+  schema_id: pinyin_aux
+  name: 拼音反查辅助
+  version: '1.0'
+speller:
+  __include: pinyin.schema:/speller
+translator:
+  dictionary: pinyin

@@ -1,0 +1,3 @@
+# SPDX-License-Identifier: CC0-1.0
+# Empty by design: replace old same-named patches before adding personal customizations.
+patch: {}

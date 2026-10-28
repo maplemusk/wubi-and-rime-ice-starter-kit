@@ -1,0 +1,4 @@
+# SPDX-License-Identifier: CC0-1.0
+# Clear legacy patches on the shared upstream base before applying the versioned overlays.
+# Back up existing personal settings before replacing this file.
+patch: {}

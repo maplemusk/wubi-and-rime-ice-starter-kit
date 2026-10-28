@@ -1,0 +1,30 @@
+The newly authored YAML overlays, two Lua compatibility guards, offline helper
+and documentation in this public kit are dedicated under CC0-1.0. See LICENSE.txt.
+
+Reference projects:
+  https://github.com/myshiqiqi/rime-wubi/tree/master
+  https://github.com/iDvel/rime-ice
+
+The public kit contains no upstream dictionary, decomposition mapping, upstream
+Lua code, binary lunar database, OpenCC data, font, image, application binary or
+Rime engine source. Users obtain both upstream repositories themselves.
+
+The offline helper selects required resources from those local downloads. It
+adapts Wubi dictionary header names/import identifiers so Wubi86, Wubi98 and
+Wubi06 coexist. Original comments, attribution and dictionary entries remain.
+Ice resources retain their contents; its default.yaml is copied under the name
+ice_defaults.yaml so it can coexist with Wubi's default.yaml. New custom patches
+route Ice to that defaults file. Source/output hashes and transformations are
+recorded in the generated UPSTREAM-SOURCE.txt.
+
+A locally generated installation ZIP contains third-party code/data. Those
+materials retain their original rights and are not covered by this kit's CC0
+dedication. No explicit license was found in the checked Wubi source snapshot.
+Ice declares GPL-3.0-only and includes components from other sources under other
+terms. Consult both projects and Ice's LICENSE and others/docs/Credits.md before
+redistribution. The helper retains those two Ice source documents under
+source-info/rime-ice/ in the assembled resources. User configuration changes and
+header renames do not make third-party materials copyright-free or CC0.
+
+Fcitx5 Android, its plugin, Rime and the existing keyboard chart retain their
+existing licenses and rights. This kit changes none of their source code.

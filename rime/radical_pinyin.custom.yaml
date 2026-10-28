@@ -1,0 +1,3 @@
+# SPDX-License-Identifier: CC0-1.0
+patch:
+  "key_binder/__include": ice_defaults:/key_binder?

@@ -1,0 +1,29 @@
+SPDX-License-Identifier: CC0-1.0
+This newly written note describes the user's locally assembled Rime resources.
+
+Wubi reference: https://github.com/myshiqiqi/rime-wubi/tree/master
+Wubi download date: (optionally fill in your date)
+Versions selected: tables/86, tables/98, tables/06
+Reference snapshot: e5c4bc88684d0c1549da393dd8ba845e48e66973
+
+Ice reference: https://github.com/iDvel/rime-ice
+Ice download date: (optionally fill in your date)
+Scheme selected: rime_ice (full Pinyin)
+Reference snapshot: da1fbe602e38f26db846fa10120ee64c2b0324c0
+
+Manual adaptations:
+- Main dictionary header names: wubi -> wubi86 / wubi98 / wubi06.
+- Decomposition header names: wb_spelling -> wb_spelling86 / wb_spelling98 / wb_spelling06.
+- Extended dictionary names: wubi.extended -> wubi86.extended / wubi98.extended / wubi06.extended.
+- Extended imports: wubi -> matching wubi86 / wubi98 / wubi06; quick_symbols retained.
+- Original attribution, comments, all other header settings and entry bodies retained.
+- Ice default.yaml copied unchanged as ice_defaults.yaml; Wubi default.yaml retained.
+- All other selected Ice resources copied unchanged, including binary lua/lunar.db.
+- Ice LICENSE and others/docs/Credits.md retained under source-info/rime-ice/.
+- New menu/profile patches and compatibility guards come from the CC0 overlay kit.
+
+Third-party resources keep their original rights and are not covered by the
+CC0 dedication for this note or the overlay. Ice declares GPL-3.0-only and has
+components under other terms; see its LICENSE and Credits.md. No explicit license
+was identified in the checked Wubi snapshot. Consult source terms before sharing
+an assembled dictionary/code package. Keep personal exports/user data private.

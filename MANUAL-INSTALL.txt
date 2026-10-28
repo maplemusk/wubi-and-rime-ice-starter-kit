@@ -1,0 +1,415 @@
+Wubi86 / Wubi98 / Wubi06 + Rime Ice: manual installation / 纯手动安装
+SPDX-License-Identifier: CC0-1.0
+
+无需 Python、命令行或运行脚本。使用文件管理器、UTF-8纯文本编辑器，
+以及必要时的 WinRAR，即可手动完成与打包工具相同的运行配置。
+No Python or commands: use a file manager, a UTF-8 text editor and, if needed,
+WinRAR. File renaming AND a few dictionary-header edits are required.
+
+1. 下载两个上游并准备目标 / Download both sources and prepare a target
+
+五笔上游 / Wubi upstream:
+  https://github.com/myshiqiqi/rime-wubi/tree/master
+  点击 Code -> Download ZIP，解压，打开里面的 rime-wubi-master。
+  应能看见 default.yaml、wubi.schema.yaml、rime.lua、lua、opencc、tables。
+  Use a fresh upstream download, not an existing personal Rime data folder.
+
+雾凇上游 / Rime Ice upstream:
+  https://github.com/iDvel/rime-ice
+  点击 Code -> Download ZIP，解压，打开里面的 rime-ice-main。
+  应能看见 rime_ice.schema.yaml、rime_ice.dict.yaml、cn_dicts、en_dicts、lua。
+  两个上游要分别解压，先不要把它们整包互相覆盖。
+  如需复现已检查的雾凇快照，可下载这个完整ZIP（解压目录带提交编号）：
+  https://github.com/iDvel/rime-ice/archive/da1fbe602e38f26db846fa10120ee64c2b0324c0.zip
+  For the checked snapshot, use that pinned full ZIP and its actual extracted folder.
+  Extract the two upstream ZIPs separately; do not merge their whole folders.
+
+本配置包 / Overlay kit:
+  解压本配置包。里面的 rime 文件夹有15个YAML，lua 文件夹有2个兼容文件。
+  这两个文件夹都需要使用；本手动方法不需要 make_android_import.py。
+
+目标 / Target:
+  在电脑另建一个空文件夹，例如 rime-ready。
+  下文所有“目标根目录”均指这个新文件夹，不直接修改上游原件或手机。
+  Create an empty rime-ready folder. All destination paths below are inside it.
+
+先在 Windows 文件管理器启用“查看 -> 显示 -> 文件扩展名”。确认文件没有
+变成 .yaml.txt。编辑用记事本、Notepad++或VS Code，保存为UTF-8纯文本；
+不要使用 Word/WPS，不要自动格式化整个词库。
+Show filename extensions. Use a plain-text editor, save as UTF-8, and preserve
+existing line endings where possible. Do not use rich text or reformat tables.
+
+2. 复制五笔共用资源 / Copy Wubi shared resources unchanged
+
+从五笔上游根目录，将下面9个文件复制到目标根目录，不编辑、不改名：
+Copy these nine Wubi upstream root files to the target root, unchanged:
+  default.yaml
+  key_bindings.yaml
+  punctuation.yaml
+  symbols.yaml
+  rime.lua
+  wubi.schema.yaml
+  pinyin.dict.yaml
+  pinyin.schema.yaml
+  quick_symbols.dict.yaml
+
+在目标中创建 opencc 文件夹，复制上游 opencc 内的：
+Create target/opencc and copy:
+  opencc/es.json
+  opencc/es.txt
+
+在目标中创建 lua 文件夹，并在其内创建 lib 子文件夹。复制上游的：
+Create target/lua and target/lua/lib. Copy these exact upstream paths:
+  lua/Submit_text.lua
+  lua/calculator.lua
+  lua/date_extend_ts.lua
+  lua/date_ts.lua
+  lua/helper.lua
+  lua/lib/basic.lua
+  lua/lunarDate.lua
+  lua/lunarGz.lua
+  lua/lunarJq.lua
+  lua/new_spelling.lua
+  lua/number.lua
+  lua/switcher.lua
+
+保持大小写及目录层级，尤其是 Submit_text.lua 和 lua/lib/basic.lua。
+现在共复制23个共用文件。不要复制上游的 build、userdb、字体、图片或主题。
+There are 23 shared files. Keep filename case and subfolders. Do not add desktop
+appearance, fonts, images, caches or personal data to the runtime folder.
+
+3. 制作六个独立码表 / Create six separately named dictionaries
+
+从下面的每个“上游来源”复制一份到目标根目录，再改成对应的新文件名。
+打开复制后的文件，只修改头部实际的 name: 一行，使其与右列一致。
+Copy each source separately, rename the copy, then edit its header's name value.
+Renaming only the file is insufficient. All six destination files coexist.
+
+上游来源 / Source                 新文件名 / Destination       头部 / Header
+--------------------------------------------------------------------------
+tables/86/wubi.dict.yaml           wubi86.dict.yaml             name: wubi86
+tables/98/wubi.dict.yaml           wubi98.dict.yaml             name: wubi98
+tables/06/wubi.dict.yaml           wubi06.dict.yaml             name: wubi06
+tables/86/wb_spelling.dict.yaml    wb_spelling86.dict.yaml      name: wb_spelling86
+tables/98/wb_spelling.dict.yaml    wb_spelling98.dict.yaml      name: wb_spelling98
+tables/06/wb_spelling.dict.yaml    wb_spelling06.dict.yaml      name: wb_spelling06
+
+词库头部在 --- 与 ... 两行之间。把实际的 name: wubi 或 name: wb_spelling
+改为表中值即可。若原值有引号，可以保留，例如 name: "wubi06"。
+只改这一个值；保留原来的注释、作者、版本、encoder、columns 等设置，
+尤其不要修改 ... 之后的词条、拆分内容、制表符或空白。
+Edit the actual YAML scalar before the literal ... line. Preserve attribution,
+comments, encoding, settings and every entry after ...; do not globally replace
+wubi throughout the file. Preserve quotes if present, or use the shown plain value.
+
+不要将86、98、06依次覆盖到同一个 wubi.dict.yaml；三版必须分别存在。
+Do not repeatedly overwrite one generic dictionary with different versions.
+
+4. 制作三个扩展词库 / Create three extended dictionaries
+
+将上游根目录的 wubi.extended.dict.yaml 复制三份到目标根目录，分别命名：
+Make three copies of upstream wubi.extended.dict.yaml in the target root:
+  wubi86.extended.dict.yaml
+  wubi98.extended.dict.yaml
+  wubi06.extended.dict.yaml
+
+每份只改头部的两个标识：name 的值，以及 import_tables 中原来 wubi 的
+那一项。第二项 quick_symbols 保持不变。保留其他头部字段及全部正文。
+In each copy, change only name and the wubi import. Keep quick_symbols, every
+other header field, all comments/attribution and the complete original body.
+The following show the fields to edit, not a replacement for the full header:
+
+[wubi86.extended.dict.yaml]
+name: wubi86.extended
+import_tables:
+  - wubi86
+  - quick_symbols
+
+[wubi98.extended.dict.yaml]
+name: wubi98.extended
+import_tables:
+  - wubi98
+  - quick_symbols
+
+[wubi06.extended.dict.yaml]
+name: wubi06.extended
+import_tables:
+  - wubi06
+  - quick_symbols
+
+方括号中的文件名仅是段落标题，不写入文件。name: 和 import_tables: 顶格，
+列表项使用两个空格缩进；保留原来这些字段之间的其他设置，不用Tab缩进。
+Bracketed filenames are labels, not file content. name: and import_tables:
+stay at column 1; list items use two spaces. Keep other original fields in place.
+
+到此共有9个独立词库文件，合计改了12个标量值：9个name和3个import。
+不要另外安装通用的 wubi.dict.yaml、wb_spelling.dict.yaml、
+wubi.extended.dict.yaml；已经改名的九份文件就是所需数据。
+There are nine edited dictionaries and twelve scalar edits: nine names and
+three imports. Keep the nine versioned filenames instead of the generic originals.
+
+5. 添加雾凇拼音资源 / Add Rime Ice resources
+
+下面所有来源都改为雾凇上游 rime-ice-main；目标仍是同一个 rime-ready。
+All sources in this step are from rime-ice-main, into the same rime-ready target.
+
+先复制雾凇根目录的 default.yaml 到目标，但将这份副本改名为：
+Copy Ice's default.yaml to the target root under this DIFFERENT filename:
+  default.yaml -> ice_defaults.yaml
+
+只改文件名，不编辑文件内容。目标的 default.yaml 必须仍是第2步的五笔版。
+本包补丁会让雾凇读取 ice_defaults.yaml，五笔继续读取自己的 default.yaml。
+Rename the copy only, without changing contents. Keep Wubi's default.yaml from
+step 2. The overlay routes Ice to ice_defaults.yaml so both defaults coexist.
+
+从雾凇根目录复制以下8个文件到目标根目录，不改名、不编辑：
+Copy these eight Ice root files to the target root, unchanged:
+  rime_ice.schema.yaml
+  rime_ice.dict.yaml
+  melt_eng.schema.yaml
+  melt_eng.dict.yaml
+  radical_pinyin.schema.yaml
+  radical_pinyin.dict.yaml
+  custom_phrase.txt
+  symbols_v.yaml
+
+创建目标 cn_dicts 文件夹，复制雾凇中的以下路径：
+Create target/cn_dicts and copy these exact Ice paths:
+  cn_dicts/8105.dict.yaml
+  cn_dicts/base.dict.yaml
+  cn_dicts/ext.dict.yaml
+  cn_dicts/tencent.dict.yaml
+  cn_dicts/others.dict.yaml
+
+创建目标 en_dicts 文件夹，复制雾凇中的以下路径：
+Create target/en_dicts and copy:
+  en_dicts/en.dict.yaml
+  en_dicts/en_ext.dict.yaml
+  en_dicts/cn_en.txt
+
+向目标已有 opencc 文件夹加入以下雾凇文件，保留五笔的 es.json 和 es.txt：
+Merge these Ice files into target/opencc, keeping Wubi's es.json and es.txt:
+  opencc/emoji.json
+  opencc/emoji.txt
+  opencc/others.txt
+
+向目标已有 lua 文件夹加入以下雾凇文件，保留五笔所有Lua与lib子目录：
+Merge these Ice files into target/lua, keeping all Wubi files and lua/lib:
+  lua/select_character.lua
+  lua/date_translator.lua
+  lua/lunar.lua
+  lua/uuid.lua
+  lua/unicode.lua
+  lua/number_translator.lua
+  lua/calc_translator.lua
+  lua/force_gc.lua
+  lua/corrector.lua
+  lua/autocap_filter.lua
+  lua/v_filter.lua
+  lua/pin_cand_filter.lua
+  lua/long_word_filter.lua
+  lua/reduce_english_filter.lua
+  lua/search.lua
+  lua/convert_ar_num_to_zh.lua
+  lua/lunar.db
+
+lunar.db 是二进制农历数据库，直接复制，绝对不要用文本编辑器打开后保存。
+这一步共37个运行资源（包含改名后的ice_defaults.yaml），全部内容保持原样。
+不要复制雾凇整个文件夹：不需要build、桌面外观、双拼、九键或其他词库。
+五笔的 rime.lua 必须保留；雾凇通过模块加载Lua，不需要替换这个入口。
+lunar.db is a binary lunar-calendar database: copy it without text editing.
+There are 37 unchanged Ice runtime resources, including the renamed defaults.
+Do not copy the entire repository, build caches, desktop styles or unused schemes.
+Keep Wubi's rime.lua. Ice's Lua modules load alongside it.
+
+再为来源许可建立 source-info/rime-ice 子目录，复制以下两份说明：
+Create target/source-info/rime-ice and copy these source documents:
+  LICENSE -> source-info/rime-ice/LICENSE
+  others/docs/Credits.md -> source-info/rime-ice/Credits.md
+
+这些是雾凇上游的许可与来源署名，不是本包的CC0许可。保留文件内容。
+These are Ice's license and component credits. Preserve their contents; they
+are separate from this overlay's CC0 dedication.
+
+6. 复制本包的方案与兼容文件 / Add all overlay profiles and Lua guards
+
+将本配置包 rime 文件夹内的全部15个YAML文件复制到目标根目录：
+Copy all fifteen YAMLs from the kit's rime folder into the target root:
+  default.custom.yaml
+  pinyin_aux.schema.yaml
+  wb_spelling86.schema.yaml
+  wb_spelling98.schema.yaml
+  wb_spelling06.schema.yaml
+  wubi86.schema.yaml
+  wubi98.schema.yaml
+  wubi06.schema.yaml
+  wubi86.custom.yaml
+  wubi98.custom.yaml
+  wubi06.custom.yaml
+  wubi.custom.yaml
+  rime_ice.custom.yaml
+  melt_eng.custom.yaml
+  radical_pinyin.custom.yaml
+
+这是复制文件本身，不是在目标里套一个 rime 子文件夹。辅助方案虽然不在
+菜单中显示，也必须保留；拼音反查和拆分库需要它们部署。
+Copy the files themselves, not the enclosing rime folder. The hidden auxiliary
+schemas are required for deployment even though the menu lists only four schemes.
+Keep the upstream wubi.schema.yaml from step 2; our profiles include that base.
+
+再把本配置包 lua 内的两个文件加入目标的现有 lua 文件夹：
+Merge the kit's two Lua guards into the existing target/lua folder:
+  lua/wubi_calculator_guard.lua
+  lua/wubi_switcher_guard.lua
+
+保留五笔的12个Lua、雾凇的16个Lua、lunar.db及lib子目录，不要用只有两个
+文件的文件夹替换整个 lua 目录。最后应有30个Lua文件和1个lunar.db。
+Keep Wubi's twelve Lua files, Ice's sixteen Lua files, lunar.db and lua/lib.
+The final lua tree has thirty Lua files plus lunar.db. Both guards are required.
+
+复制本包 manual/UPSTREAM-SOURCE.txt 到目标根目录，并可填写下载日期。
+这是一份手动来源记录；Python版会另列文件摘要，手动安装无需计算摘要。
+Rime不读取该来源记录；86个运行文件与Python方法相同，加上两份雾凇许可
+来源说明和这一份记录，共89个文件。README、NOTICE、LICENSE也可另行保留。
+Copy the kit's manual/UPSTREAM-SOURCE.txt to the target root; optionally fill in
+both download dates. Hashes are bookkeeping, not required by Rime. The 86 runtime
+files match the Python method. With two Ice source documents and this note there
+are 89 files. You may also keep the kit's README/NOTICE/LICENSE for reference.
+
+7. 装到手机 / Install on Android
+
+先导出私人备份。需要得到干净的Rime目录时，只清理手机data/rime；保留
+app设置、字体、主题、剪贴板及其他输入法数据。不要清除整个app的数据。
+安装会覆盖五笔与雾凇的同名 custom 补丁，先保存自己的个性配置。
+Back up first. A clean setup requires cleaning only the phone's data/rime after
+saving personal customizations. Leave unrelated app data, settings and fonts alone.
+
+方式A：能直接访问用户目录 / Direct folder access
+
+把 rime-ready 的内容复制到手机Rime用户目录 data/rime，保留 lua、lua/lib、
+opencc、cn_dicts、en_dicts、source-info 等子目录。最终应是 data/rime/wubi06.schema.yaml 等，不是
+ data/rime/rime-ready/wubi06.schema.yaml。
+同名文件应替换；若文件管理器生成“(2)”副本，先移走旧文件再复制，保持
+规范文件名。不要改名已有 wubi06.schema.yaml 的schema_id或显示名称。
+Copy the contents of rime-ready into Android data/rime, keeping subdirectories.
+Avoid a nested rime-ready folder and duplicate names such as filename (2).yaml.
+
+方式B：目录权限受限，更新自己的导出ZIP / Private export + WinRAR
+
+1) 从 Fcitx5 Android 导出当前用户数据，保存原件，另建一份工作副本。
+2) 用 WinRAR 打开工作副本ZIP，在压缩包内进入 external/data/rime/。
+3) 把准备目录 rime-ready 内的内容拖入这里，包括 lua、opencc、cn_dicts、en_dicts、source-info。
+   选择添加并替换同名文件，保留文件夹层级和目录记录。若要移除压缩包内
+   的旧Rime资源，先备份后清理这里的旧内容，但保留 rime 目录本身。
+4) metadata.json、shared_prefs、databases、fonts及其他原备份内容保持原样。
+   保持ZIP格式，保存工作副本，传回手机，通过“高级 -> 导入用户数据”导入。
+
+Use WinRAR to update a copy of your existing valid export ZIP in place. Navigate
+inside it to external/data/rime/, add the CONTENTS of rime-ready, including lua,
+opencc, cn_dicts, en_dicts and source-info folders. Replace matching files. Retain
+metadata, all other backup folders, UTF-8 names and parent-directory entries. Keep ZIP format; do not add a
+wrapper directory or create a RAR archive. Import that private working copy.
+
+ZIP内部位置示意 / Required archive structure:
+  metadata.json
+  external/
+    data/
+      rime/
+        wubi06.schema.yaml
+        wubi86.schema.yaml
+        wubi98.schema.yaml
+        rime_ice.schema.yaml
+        ice_defaults.yaml
+        ...other prepared files...
+        lua/
+          lib/
+            basic.lua
+        opencc/
+        cn_dicts/
+        en_dicts/
+        source-info/
+          rime-ice/
+  ...other original export folders, unchanged...
+
+不需要自己重算额外校验清单；WinRAR会更新ZIP的CRC。MALFORMED[1]通常与
+ZIP文件名编码有关，确认用ZIP格式和UTF-8名称。本指南所需文件名都是ASCII。
+若从零重新打包，不仅根目录要正确，还需保留父目录记录；直接更新原有效
+ZIP可保留已有目录记录。添加lua/opencc/cn_dicts/en_dicts/source-info时按文件夹添加，保留子目录记录。
+No separate checksum manifest needs editing; the ZIP tool updates CRCs. The
+importer needs correct UTF-8 entry names and explicit parents before children.
+Updating an existing valid export retains its original parent directories.
+
+从ZIP删除旧文件，不会删除手机已有的文件：导入是合并。要清理手机上的
+旧资源，须另行备份并清理手机data/rime。用户数据导出可能含有私人记录，
+包括剪贴板和个人词库，请勿作为公共配置包分享。
+Import merges. Deleting an archive entry does not delete an installed phone file.
+Keep personal exports private; they may contain clipboard/history and user words.
+
+8. 部署、选择与确认 / Deploy and verify
+
+重启输入法 -> 执行Rime Deploy/部署 -> 再重启输入法。
+然后从“键盘工具栏更多（⋮）-> 当前Rime方案项”选择：
+  新世纪五笔  (wubi06)
+  五笔86     (wubi86)
+  五笔98     (wubi98)
+  雾凇拼音   (rime_ice)
+
+雾凇完整词库较大，首次部署比五笔慢，请等待部署完成再切换。
+Ice's full dictionaries are larger; allow extra time for the first deployment.
+
+Restart the input method, run Rime Deploy, then restart once more. Use toolbar
+More -> current Rime scheme -> the native scheme submenu to choose Wubi06/86/98 or Rime Ice.
+No app or plugin rebuild is needed. Existing image hints remain Wubi06-only.
+
+可检查 / Quick checks:
+- 五笔中 znihao：应可反查到“你好”；“显示拆分”开启后应有相应注释。
+- 五笔中 =1+2：应出现计算结果3；qz后按Enter应提交窄字符qz。
+- 雾凇中 nihao：应出现“你好”；rq、sj、nl分别触发日期、时间、农历。
+- 雾凇中 cC1+2：应出现计算结果3；uU后接部件拼音可拆字反查。
+- 雾凇中输入字母后按Enter，应提交原始窄字符；其反查前缀与五笔不同。
+- 四个方案都应可选，切换后状态名称改变，06图片提示仅在06出现。
+- 若拆分注释是方块，可自行导入已下载上游font里的“黑体字根.ttf”，
+  通过现有app字体设置应用到候选文字；本公开包不附带字体。
+
+In Wubi, znihao should offer 你好, =1+2 should offer 3 and qz then Enter should
+commit narrow qz. In Ice, nihao should offer 你好; rq/sj/nl trigger date/time/lunar;
+cC1+2 invokes its calculator. All four native menu entries should work. Import
+the upstream radical font separately if decomposition comments need it. The image popup needs no font.
+Wubi's typed mode/next commands require numeric keys; tapping their text
+labels can commit them. Use the native Rime menu for touch switching.
+
+出错时先检查 / If deployment or a feature fails:
+- 同名文件是否替换到正确位置，是否出现.yaml.txt、(2)或额外外层文件夹？
+- 六个主/拆分词库的内部name是否与新文件名对应？
+- 三个扩展词库是否分别导入wubi86/wubi98/wubi06，并保留quick_symbols？
+- 是否完整复制15个本包YAML、两个兼容Lua、双方所列资源及lua/lunar.db？
+- 是否保留五笔的wubi.schema.yaml、rime.lua、lua/lib/basic.lua和opencc/es？
+- 目标default.yaml是否来自五笔，ice_defaults.yaml是否来自雾凇且内容未改？
+- 雾凇cn_dicts/en_dicts和三个custom补丁是否齐全？是否误改了二进制lunar.db？
+
+Check exact filenames/extensions, header names/imports, all auxiliary schemas,
+both guard modules, Lua subfolders, the base wubi.schema.yaml and shared resources.
+
+许可与验证范围 / Rights and verification
+
+本指南、配置和兼容代码为新写的CC0文件。上游数据由用户自行下载，保留
+原作者的署名、注释和权利；手工改头部标识不会使它们变成CC0。
+本指南不附带任何词库、拆分表、上游Lua、字体或图片。
+所查五笔上游快照没有明确LICENSE，分享含其资源的成品前请向来源核实授权。
+雾凇项目声明GPL-3.0-only，并含其他来源、不同条款的组件，见随源下载的
+LICENSE和others/docs/Credits.md；不要把用户组装的词库/代码称为“无版权”。
+Rime、app、插件和现有字根图片的许可与权利保持原状。
+
+New guide/overlays/guards are CC0. User-downloaded upstream resources retain
+attribution and rights; header edits do not relicense them. Check source terms
+before redistributing an assembled data folder or private export.
+
+参考快照 / Reference snapshot:
+  myshiqiqi/rime-wubi e5c4bc88684d0c1549da393dd8ba845e48e66973
+  https://github.com/myshiqiqi/rime-wubi/tree/e5c4bc88684d0c1549da393dd8ba845e48e66973
+  iDvel/rime-ice da1fbe602e38f26db846fa10120ee64c2b0324c0
+  https://github.com/iDvel/rime-ice/tree/da1fbe602e38f26db846fa10120ee64c2b0324c0
+四方案已在Linux librime1.13.1 + Lua5.4实际部署并验证菜单切换与输入功能。
+Android设备界面仍需实际确认；详细范围见README。没有修改app或插件源码。
+All four schemes were deployed and exercised with Linux librime1.13.1 + Lua5.4.
+Android device UI is untested. See README for checks. No app/plugin source changes.

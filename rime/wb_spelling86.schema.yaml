@@ -1,0 +1,8 @@
+# SPDX-License-Identifier: CC0-1.0
+# Hidden deployment dependency; omitted from the selectable schema list.
+schema:
+  schema_id: wb_spelling86
+  name: 五笔86拆分辅助
+  version: '1.0'
+translator:
+  dictionary: wb_spelling86
